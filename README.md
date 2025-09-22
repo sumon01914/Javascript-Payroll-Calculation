@@ -6,7 +6,7 @@ A lightweight Javascript plugin for salary calculation with a built-in formula c
 - ✅ **Formula calculator UI** for custom salary rules  
 - ✅ Calculate salary using **percentage of a base head**  
 - ✅ Enter **fixed amounts** directly  
-- ✅ Lightweight, easy-to-use jQuery plugin  
+- ✅ Lightweight, easy-to-use this plugin  
 - ✅ Simple integration into payroll or HR systems
 
 - ## 📦 Installation
