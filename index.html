@@ -1,0 +1,346 @@
+<html>
+	<head>
+	<title>Javascript Payroll Calculation</title>
+	</head>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/style-calc.css">
+ <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+        crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="http://localhost/hrm/public/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/payroll-calc.js"></script>
+<body>
+<div class="text-white text-center py-3 mb-4 shadow">
+    <h3 style="text-align: center;">
+    Javascript Payroll Calculation
+  </h3>
+  </div>
+<div class="d-flex">
+<div class="row ">
+<div class="col-md-8 col-md-offset-2">
+    <div class="tshadow">
+      <div class="box-body">
+        <div class="row">
+		 <div class="col-md-4">
+			<div class="form-group">
+				<label class="text-start d-block" style="text-align:left!important">Salary Grade</label>
+				<div style="display: flex;">
+					<input type="text" class="form-control"  name="salary_grade" id="salary_grade" value=""  placeholder="Salary Grade">
+				</div>
+			</div>
+	   </div>
+		<div class="col-md-2">
+			<div class="form-group">
+				<label>Gross Salary</label>
+				<div class="number_box">
+					<input type="text" class="form-control text-right" name="gross_salary" id="gross_salary" value="30000" onkeypress="return numbersonly(this,event)" placeholder="0.00">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div class="form-group">
+				<label>Cash Disbursement </label>
+				<select name="cash_disbursement" id="cash_disbursement" class="form-control">
+					<option value="1">Yes</option>
+					<option value="2" >No</option>
+				</select>
+			</div>
+		</div>
+		<div class="col-xl-2">
+			<div class="form-group">
+				<label>&nbsp;</label>
+				<div class="input-group">
+						<button type="button" name="calculate" id="calculate" onclick="calculate_all()" class="plusign pull-right" style="padding:3px 5px!important"><i class="fa fa-calculator"></i> Calculate</button>
+				</div>
+			</div>
+		</div>
+        </div>
+        <div class="row">
+           <div class="col-md-12">
+              <div class="panel panel-info">
+                 <div class="panelheight pr-05 ps-5">
+                    <div class="table-responsive">
+                       <table class="table table-hover" id="salary">
+                          <thead>
+							<tr>
+								<th width="19%">
+									Payroll Head
+								</th>
+								<th width="19%">
+									Type
+								</th>
+								<th width="19%">
+									Percentage/ Formula
+								</th>
+								<th width="19%">
+									Base Head
+								</th>
+								<th width="19%" class="text-right">
+									Amount
+								</th>
+								<th width="5%">
+									<button type="button" onclick="add_salary_breakdown()" class="btn btn-primary plusign pull-right" autocomplete="off"><i class="fa fa-plus"></i></button>
+								</th>
+							</tr>
+                       </thead>
+                     <tbody>
+																														<tr class="policyRow">
+                        <td>
+							<select name="payroll_head[]" id="payroll_head_1" class="form-control">
+								<option value="">[Select]</option>
+								<option value="35">Attend. Bonus</option>
+								<option value="1" selected="">Basic</option>
+								<option value="4">Conveyance Allowance</option>
+								<option value="13">Food Allowance</option>
+								<option value="20">Gross Salary</option>
+								<option value="2">House Rent</option>
+								<option value="14">Incentives</option>
+								<option value="3">Medical Allowance</option>
+								<option value="44">PF Loan</option>
+								<option value="11">Transport Allowance</option>
+								<option value="26">Transport Contribution</option>
+							</select>
+						</td>
+							<td>
+								<select onchange="change_type('1');set_value('1','type_display','type')" name="type_display[]" id="type_display_1" class="form-control" >
+									<option value="%" selected="">%</option>
+									<option value="Fixed">Fixed</option>
+									<option value="Formula">Formula</option>
+								</select>
+								<input type="hidden" name="type[]" id="type_1" value="%">
+							</td>
+							<td><input type="text" name="percentage_formula[]" id="percentage_formula_1" value="60" class="form-control"></td>
+							<td>
+								<select onchange="set_value('1','base_head_display','base_head')" name="base_head_display[]" id="base_head_display_1" class="form-control" >
+									  <option value="">[Select]</option>
+									  <option value="35">Attend. Bonus</option>
+									  <option value="1">Basic</option>
+									  <option value="4">Conveyance Allowance</option>
+									  <option value="13">Food Allowance</option>
+									  <option value="20" selected="">Gross Salary</option>
+									  <option value="2">House Rent</option>
+									  <option value="14">Incentives</option>
+									  <option value="3">Medical Allowance</option>
+									  <option value="44">PF Loan</option>
+									  <option value="11">Transport Allowance</option>
+									  <option value="26">Transport Contribution</option>
+								  </select>
+									<input type="hidden" name="base_head[]" value="20" id="base_head_1">
+								</td>
+                                <td><div class="number_box"><input type="text" name="amount[]" id="amount_1" value="18000" onblur="calculate_total(  );" class="form-control text-right" readonly=""></div></td>
+								  <td><button id="remove_row" style="" class="closebtn  pull-right" type="button"><i class="fa fa-remove"></i></button></td>
+                       </tr>
+						<tr class="policyRow">
+							<td>
+								<select name="payroll_head[]" id="payroll_head_2" class="form-control">
+									<option value="">[Select]</option>
+									<option value="35">Attend. Bonus</option>
+									<option value="1">Basic</option>
+									<option value="4">Conveyance Allowance</option>
+									<option value="13">Food Allowance</option>
+									<option value="20">Gross Salary</option>
+									<option value="2">House Rent</option>
+									<option value="14">Incentives</option>
+									<option value="3" selected="">Medical Allowance</option>
+									<option value="44">PF Loan</option>
+									<option value="11">Transport Allowance</option>
+									<option value="26">Transport Contribution</option>
+								</select>
+							</td>
+							<td>
+								<select onchange="change_type('2');set_value('2','type_display','type')" name="type_display[]" id="type_display_2" class="form-control">
+									<option value="%" selected="">%</option>
+									<option value="Fixed">Fixed</option>
+									<option value="Formula">Formula</option>
+								</select>
+								<input type="hidden" name="type[]" id="type_2" value="%">
+							</td>
+							<td><input type="text" name="percentage_formula[]" id="percentage_formula_2" value="10" class="form-control"></td>
+							<td>
+								<select onchange="set_value('2','base_head_display','base_head')" name="base_head_display[]" id="base_head_display_2" class="form-control" >
+								  <option value="">[Select]</option>
+								  <option value="35">Attend. Bonus</option>
+								  <option value="1" selected="">Basic</option>
+								  <option value="4">Conveyance Allowance</option>
+								  <option value="13">Food Allowance</option>
+								  <option value="20">Gross Salary</option>
+								  <option value="2">House Rent</option>
+								  <option value="14">Incentives</option>
+								  <option value="3">Medical Allowance</option>
+								  <option value="44">PF Loan</option>
+								  <option value="11">Transport Allowance</option>
+								  <option value="26">Transport Contribution</option>
+							</select>
+                               <input type="hidden" name="base_head[]" value="1" id="base_head_2">
+                           </td>
+							  <td><div class="number_box"><input type="text" name="amount[]" id="amount_2" value="1800" onblur="calculate_total(  );" class="form-control text-right" readonly=""></div></td>
+							  <td><button id="remove_row" style="" class="closebtn  pull-right" type="button"><i class="fa fa-remove"></i></button></td>
+                           </tr>
+                          <tr class="policyRow">
+								<td>
+									<select name="payroll_head[]" id="payroll_head_3" class="form-control">
+										<option value="">[Select]</option>
+										<option value="35">Attend. Bonus</option>
+										<option value="1">Basic</option><option value="4">Conveyance Allowance</option>
+										<option value="13">Food Allowance</option>
+										<option value="20">Gross Salary</option>
+										<option value="2" selected="">House Rent</option>
+										<option value="14">Incentives</option>
+										<option value="3">Medical Allowance</option>
+										<option value="44">PF Loan</option>
+										<option value="11">Transport Allowance</option>
+										<option value="26">Transport Contribution</option>
+									</select>
+								</td>
+								<td>
+									<select onchange="change_type('3');set_value('3','type_display','type')" name="type_display[]" id="type_display_3" class="form-control">
+										<option value="%" selected="">%</option>
+										<option value="Fixed">Fixed</option>
+										<option value="Formula">Formula</option>
+									</select>
+									<input type="hidden" name="type[]" id="type_3" value="%">
+								</td>
+								<td><input type="text" name="percentage_formula[]" id="percentage_formula_3" value="50" class="form-control" ></td>
+								<td>
+									<select onchange="set_value('3','base_head_display','base_head')" name="base_head_display[]" id="base_head_display_3" class="form-control">
+									  <option value="">[Select]</option>
+									  <option value="35">Attend. Bonus</option>
+									  <option value="1" selected="">Basic</option>
+									  <option value="4">Conveyance Allowance</option>
+									  <option value="13">Food Allowance</option>
+									  <option value="20">Gross Salary</option>
+									  <option value="2">House Rent</option>
+									  <option value="14">Incentives</option>
+									  <option value="3">Medical Allowance</option>
+									  <option value="44">PF Loan</option>
+									  <option value="11">Transport Allowance</option>
+									  <option value="26">Transport Contribution</option>
+									</select>
+                                      <input type="hidden" name="base_head[]" value="1" id="base_head_3">
+                                    </td>
+									  <td><div class="number_box"><input type="text" name="amount[]" id="amount_3" value="9000" onblur="calculate_total(  );" class="form-control text-right" readonly=""></div></td>
+									  <td><button id="remove_row" style="" class="closebtn  pull-right" type="button"><i class="fa fa-remove"></i></button></td>
+                                    </tr>
+                                     <tr class="policyRow">
+										<td>
+											<select name="payroll_head[]" id="payroll_head_4" class="form-control">
+												<option value="">[Select]</option>
+												<option value="35">Attend. Bonus</option>
+												<option value="1">Basic</option>
+												<option value="4" selected="">Conveyance Allowance</option>
+												<option value="13">Food Allowance</option>
+												<option value="20">Gross Salary</option>
+												<option value="2">House Rent</option>
+												<option value="14">Incentives</option>
+												<option value="3">Medical Allowance</option>
+												<option value="44">PF Loan</option>
+												<option value="11">Transport Allowance</option>
+												<option value="26">Transport Contribution</option>
+											</select>
+										</td>
+										<td>
+											<select onchange="change_type('4');set_value('4','type_display','type')" name="type_display[]" id="type_display_4" class="form-control">
+												<option value="%">%</option>
+												<option value="Fixed">Fixed</option>
+												<option value="Formula" selected="">Formula</option>
+											</select>
+											<input type="hidden" name="type[]" id="type_4" value="Formula">
+										</td>
+										<td><input type="text" name="percentage_formula[]" id="percentage_formula_4" value="(GS-BS-MA-HR)" class="form-control" onfocus="add_formula( 4 );" onblur="calculate_amount( 4 );"  autocomplete="off"></td>
+										
+										<td>
+											<select onchange="set_value('4','base_head_display','base_head')" name="base_head_display[]" id="base_head_display_4" class="form-control" >
+											  <option value="">[Select]</option>
+											  <option value="35">Attend. Bonus</option>
+											  <option value="1">Basic</option>
+											  <option value="4">Conveyance Allowance</option>
+											  <option value="13">Food Allowance</option>
+											  <option value="20">Gross Salary</option>
+											  <option value="2">House Rent</option>
+											  <option value="14">Incentives</option>
+											  <option value="3">Medical Allowance</option>
+											  <option value="44">PF Loan</option>
+											  <option value="11">Transport Allowance</option>
+											  <option value="26">Transport Contribution</option>
+											 </select>
+											<input type="hidden" name="base_head[]" value="0" id="base_head_4">
+										</td>
+										  <td><div class="number_box"><input type="text" name="amount[]" id="amount_4" value="1200" onblur="calculate_total(  );" class="form-control text-right" readonly=""></div></td>
+										  <td><button id="remove_row" style="" class="closebtn  pull-right" type="button"><i class="fa fa-remove"></i></button></td>
+                                       </tr>
+									   </tbody>
+                              <tfoot style="display: table-footer-group;">
+                              <tr>
+                                  <td colspan="2" style="padding-top:10px;">&nbsp;</td>
+                                  <td align="center" style="padding-top:10px;">&nbsp;</td>
+                                  <td align="justify" class="control-label text-bold pull-right" style="padding-top:10px;font-weight:bold">Net Amount:</td>
+                                  <td>
+                                      <div class="number_box">
+                                          <input type="tex" name="total_salary" id="total_salary" readonly="" class="form-control total_salary text-right text-bold" value="0.00" autocomplete="off"></div><!--<span id="total_salary" style="float:right;">0.00</span>--></td>
+                              </tr>
+                              </tfoot>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+ </div>
+</div>
+</div>
+<div class="modal fade" id="calculator" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <h4 class="modal-title" id="myModalLabel">Formula Calculator</h4>
+            </div>
+            <div class="form-group">
+                <div class="calculator">
+                    <input type="text" id="display" name="formula">
+                    <div class="buttons">
+                        <button class="operator" name="brace_start" value="(" fval="(" onclick="write_formula( 'brace_start' );">(</button>
+                        <button class="operator" name="brace_end" value=")" fval=")" onclick="write_formula( 'brace_end' );">)</button>
+                        <button class="operator" name="plus" value="+" fval="+" onclick="write_formula( 'plus' );">+</button>
+                        <button class="operator" name="minus" value="-" fval="-" onclick="write_formula( 'minus' );">-</button>
+						<button name="number_9" fval="9" value="9" onclick="write_formula( 'number_9' );">9</button>
+						<button name="number_8" fval="8" value="8" onclick="write_formula( 'number_8' );">8</button>
+						<button name="number_7" fval="7" value="7" onclick="write_formula( 'number_7' );">7</button>
+						<button name="multiply" value="*" fval="*" class="operator" onclick="write_formula( 'multiply' );"> * </button>
+						<button name="number_6" fval="6" value="6" onclick="write_formula( 'number_6' );">6</button>
+						<button name="number_5" fval="5" value="5" onclick="write_formula( 'number_5' );">5</button>
+						<button name="number_4" fval="4" value="4" onclick="write_formula( 'number_4' );">4</button>
+						<button name="divide" value="/" fval="/" class="operator" onclick="write_formula( 'divide' );">/</button>
+						<button name="number_3" fval="3" value="3" onclick="write_formula( 'number_3' );">3</button>
+						<button name="number_2" fval="2" value="2" onclick="write_formula( 'number_2' );">2</button>
+						<button name="number_1" fval="1" value="1" onclick="write_formula( 'number_1' );">1</button>
+						<button name="point" value="." fval="." class="operator" onclick="write_formula( 'point' );">.</button>
+						<button name="number_0" fval="0" value="0" onclick="write_formula( 'number_0' );">0</button>
+						<button name="backspace" value="←" class="operator" onclick="write_formula( 'backspace' );">←</button>
+						<button style="font-size:11px;" name="Attend. Bonus" value="Attend. Bonus (AB)" fval="" onclick="write_formula( 'Attend. Bonus' );">Attend. Bonus (AB)</button>
+						<button style="font-size:11px;" name="Basic" value="Basic (BS)" fval="BS" onclick="write_formula( 'Basic' );">Basic (BS)</button>
+						<button style="font-size:11px;" name="Conveyance Allowance" value="Conveyance Allowance (CA)" fval="CA" onclick="write_formula( 'Conveyance Allowance' );">Conveyance Allowance (CA)</button>
+						<button style="font-size:11px;" name="Food Allowance" value="Food Allowance (FA)" fval="FA" onclick="write_formula( 'Food Allowance' );">Food Allowance (FA)</button>
+						<button style="font-size:11px;" name="Gross Salary" value="Gross Salary (GS)" fval="GS" onclick="write_formula( 'Gross Salary' );">Gross Salary (GS)</button>
+						<button style="font-size:11px;" name="House Rent" value="House Rent (HR)" fval="HR" onclick="write_formula( 'House Rent' );">House Rent (HR)</button>
+						<button style="font-size:11px;" name="Incentives" value="Incentives (INC)" fval="" onclick="write_formula( 'Incentives' );">Incentives (INC)</button>
+						<button style="font-size:11px;" name="Medical Allowance" value="Medical Allowance (MA)" fval="MA" onclick="write_formula( 'Medical Allowance' );">Medical Allowance (MA)</button>
+						<button style="font-size:11px;" name="PF Loan" value="PF Loan ()" fval="" onclick="write_formula( 'PF Loan' );">PF Loan ()</button>
+						<button style="font-size:11px;" name="Transport Allowance" value="Transport Allowance (TA)" fval="TA" onclick="write_formula( 'Transport Allowance' );">Transport Allowance (TA)</button>
+						<button style="font-size:11px;" name="Transport Contribution" value="Transport Contribution (TC)" fval="TC" onclick="write_formula( 'Transport Contribution' );">Transport Contribution (TC)</button>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<input type="button" class="btn btn-info pull-right add-formula" data-id="" data-dismiss="modal" value="Ok">
+					</div>
+				</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
